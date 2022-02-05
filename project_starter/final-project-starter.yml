@@ -3,16 +3,58 @@ Parameters:
   # but using them will make your cloudformation templates more reusable
   # use them for things that may change over time, such as instance type,
   # VPCs and so on.
+
+  EnvironmentName:
+      Description: An environment name that will be prefixed to resource names
+      Type: String
+
+  VpcCIDR: 
+      Description: IP range (CIDR notation) for this VPC
+      Type: String
+      Default: 10.0.0.0/16
+
+  PublicSubnet1CIDR:
+      Description: IP range (CIDR notation) for the public subnet in the first Availability Zone
+      Type: String
+      Default: 10.0.0.0/24
+
+  PublicSubnet2CIDR:
+      Description: IP range (CIDR notation) for the public subnet in the second Availability Zone
+      Type: String
+      Default: 10.0.1.0/24
+
+  PrivateSubnet1CIDR:
+      Description: IP range (CIDR notation) for the private subnet in the first Availability Zone
+      Type: String
+      Default: 10.0.2.0/24
+
+  PrivateSubnet2CIDR:
+      Description: IP range (CIDR notation) for the private subnet in the second Availability Zone
+      Type: String
+      Default: 10.0.3.0/24
 Resources:
   # instace profile contains the IAM Role name(s) that we want to associate to our auto scaling EC2 Servers
   # never give too much permissions to your EC2 instances! if they get hacked, the permissions get hacked also!
   # in this example, I create a Role called UdacityS3ReadOnlyC2 and just give it a policy of S3 Read-Only Access
-  ProfileWithRolesForOurApp:
-    Type: AWS::IAM::InstanceProfile
-    Properties: 
-      Roles:
-        - UdacityS3ReadOnlyEC2
-Outputs: 
+  # ProfileWithRolesForOurApp:
+  #   Type: AWS::IAM::InstanceProfile
+  #   Properties: 
+  #     Roles:
+  #       - UdacityS3ReadOnlyEC2
+  VPC: 
+      Type: AWS::EC2::VPC
+      Properties:
+          CidrBlock: !Ref VpcCIDR
+          EnableDnsHostnames: true
+          Tags: 
+              - Key: Name 
+                Value: !Ref EnvironmentName
+Outputs:
+  VPC: 
+      Description: A reference to the created VPC
+      Value: !Ref VPC
+      Export:
+        Name: !Sub ${EnvironmentName}-VPCID
   # This is also optional.
   # Bonus points for useful outputs!
   # for example, if you create a Load Balancer
