@@ -5,21 +5,72 @@ Parameters:
     EnvironmentName:
         Description: An environment name that will be prefixed to resource names
         Type: String
+    WebInstanceAmiId:
+        Description: Region specific image ami id for web servers
+        Type: String
+    WebInstanceType:
+        Description: Instance type for web servers
+        Type: String
+    WebKeyName:
+        Description: Key name for accessing public servers
+        Type: String
+    LocalIP:
+        Description: Local IP for accessing public servers
+        Type: String
 
 Resources:
-    VPC: 
-        Type: AWS::EC2::VPC
+    WebSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties: 
+            GroupDescription: Allow http + local ssh (temp) traffic to web servers, and unrestricted outbound traffic
+            GroupName: WebSecurityGroup
+            SecurityGroupIngress:
+            - IpProtocol: tcp
+              FromPort: 80
+              ToPort: 80
+              CidrIp: 0.0.0.0/0
+            - IpProtocol: tcp
+              FromPort: 22
+              ToPort: 22
+              CidrIp: !Sub ${LocalIP}/32
+            SecurityGroupEgress:
+            - IpProtocol: -1
+              CidrIp: 0.0.0.0/0
+            VpcId: 
+                Fn::ImportValue: !Sub ${EnvironmentName}-VPCID
+
+
+    WebLaunchConfig: 
+        Type: AWS::AutoScaling::LaunchConfiguration
         Properties:
-            CidrBlock: !Ref VpcCIDR
-            EnableDnsHostnames: true
-            Tags: 
-                - Key: Name 
-                  Value: !Ref EnvironmentName
+            ImageId: !Ref WebInstanceAmiId
+            SecurityGroups: 
+                - !Ref WebSecurityGroup
+            InstanceType: !Ref WebInstanceType
+            KeyName: !Ref WebKeyName
+            BlockDeviceMappings:
+                - DeviceName: /dev/sda1
+                  Ebs:
+                    VolumeSize: 10
+                    VolumeType: "gp2"
+            UserData: !Base64 |
+                #!/bin/bash
+                apt-get update -y
+                apt-get install apache2 -y
+                systemctl start apache2.service
+                cd /var/www/html
+                echo "Udacity Demo Web Server Up and Running!" > index.html
 
 
-Outputs:
-    VPC: 
-        Description: A reference to the created VPC
-        Value: !Ref VPC
-        Export:
-            Name: !Sub ${EnvironmentName}-VPCID
+    WebAutoScalingGroup:
+        Type: AWS::AutoScaling::AutoScalingGroup
+        Properties:
+            VPCZoneIdentifier:
+                - Fn::ImportValue: !Sub ${EnvironmentName}-PUB1-SN
+                - Fn::ImportValue: !Sub ${EnvironmentName}-PUB2-SN
+            LaunchConfigurationName: !Ref WebLaunchConfig
+            MinSize: '0'
+            MaxSize: '1'
+            DesiredCapacity: '1'
+
+

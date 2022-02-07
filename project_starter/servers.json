@@ -2,5 +2,22 @@
 	{
 		"ParameterKey": "EnvironmentName",
 		"ParameterValue": "UdacityAwsDevopsC2Project"
+	},
+	{
+		"ParameterKey": "WebInstanceAmiId",
+		"ParameterValue": "ami-0e472ba40eb589f49"
+	},
+	{
+		"ParameterKey": "WebInstanceType",
+		"ParameterValue": "t2.micro"
+	},
+	{
+		"ParameterKey": "WebKeyName",
+		"ParameterValue": "udacity-devops-c2"
+	},
+	{
+		"ParameterKey": "LocalIP",
+		"ParameterValue": "188.211.160.1"
 	}
+
 ]
