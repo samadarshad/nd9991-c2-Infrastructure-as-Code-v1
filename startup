@@ -13,3 +13,9 @@ aws cloudformation update-stack --stack-name UdacityAwsDevopsC2 --template-body 
 
 
 aws cloudformation update-stack --stack-name UdacityAwsDevopsC2Servers --template-body file://servers.yml  --parameters file://servers.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+
+aws cloudformation update-stack --stack-name UdacityAwsDevopsC2S3 --template-body file://s3.yml  --parameters file://s3.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+
+aws cloudformation delete-stack --stack-name UdacityAwsDevopsC2 --region=us-east-1
+aws cloudformation delete-stack --stack-name UdacityAwsDevopsC2Servers --region=us-east-1
+aws cloudformation delete-stack --stack-name UdacityAwsDevopsC2S3 --region=us-east-1

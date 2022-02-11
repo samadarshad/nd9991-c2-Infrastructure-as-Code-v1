@@ -1,0 +1,20 @@
+Description: >
+    Samad Arshad / Udacity AWS Devops Project 2
+
+Parameters:
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+
+Resources:
+    S3Bucket:
+        Type: AWS::S3::Bucket
+
+
+
+Outputs:
+    S3Bucket: 
+        Description: ID of the S3 Bucket
+        Value: !Ref S3Bucket
+        Export:
+            Name: !Sub ${EnvironmentName}-S3-BUCKET
