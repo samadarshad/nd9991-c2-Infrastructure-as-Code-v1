@@ -131,6 +131,6 @@ Resources:
 Outputs:
     LoadBalancerDNS: 
         Description: DNS of the Load Balancer
-        Value: !GetAtt LoadBalancer.DNSName
+        Value: !Join ["", ["http://", !GetAtt LoadBalancer.DNSName]]
         Export:
             Name: !Sub ${EnvironmentName}-LB-DNS
