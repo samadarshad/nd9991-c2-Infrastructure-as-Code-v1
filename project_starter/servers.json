@@ -18,6 +18,17 @@
 	{
 		"ParameterKey": "LocalIP",
 		"ParameterValue": "188.211.160.1"
+	},
+	{
+		"ParameterKey": "MinimumNumInstances",
+		"ParameterValue": "0"
+	},
+	{
+		"ParameterKey": "MaximumNumInstances",
+		"ParameterValue": "1"
+	},
+	{
+		"ParameterKey": "DesiredNumInstances",
+		"ParameterValue": "1"
 	}
-
 ]

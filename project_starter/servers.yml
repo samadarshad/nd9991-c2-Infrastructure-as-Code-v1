@@ -17,6 +17,15 @@ Parameters:
     LocalIP:
         Description: Local IP for accessing public servers
         Type: String
+    MinimumNumInstances:
+        Description: Minimum size for web autoscaling group
+        Type: Number
+    MaximumNumInstances:
+        Description: Maximum size for web autoscaling group
+        Type: Number
+    DesiredNumInstances:
+        Description: Desired size for web autoscaling group
+        Type: Number
 
 Resources:
 ### Instances
@@ -68,11 +77,11 @@ Resources:
             VPCZoneIdentifier:
                 - Fn::ImportValue: !Sub ${EnvironmentName}-PRIV-NETS
             LaunchConfigurationName: !Ref WebLaunchConfig
-            MinSize: '0'
-            MaxSize: '1'
-            DesiredCapacity: '1'
+            MinSize: !Ref MinimumNumInstances
+            MaxSize: !Ref MaximumNumInstances
+            DesiredCapacity: !Ref DesiredNumInstances
             TargetGroupARNs:
-            - Ref: WebTargetGroup
+            - !Ref WebTargetGroup
 
 ### Load Balancer
     WebTargetGroup:
