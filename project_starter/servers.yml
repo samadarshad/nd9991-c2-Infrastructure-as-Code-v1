@@ -19,11 +19,11 @@ Parameters:
         Type: String
 
 Resources:
+### Instances
     WebSecurityGroup:
         Type: AWS::EC2::SecurityGroup
         Properties: 
             GroupDescription: Allow http + local ssh (temp) traffic to web servers, and unrestricted outbound traffic
-            GroupName: WebSecurityGroup
             SecurityGroupIngress:
             - IpProtocol: tcp
               FromPort: 80
@@ -66,11 +66,71 @@ Resources:
         Type: AWS::AutoScaling::AutoScalingGroup
         Properties:
             VPCZoneIdentifier:
-                - Fn::ImportValue: !Sub ${EnvironmentName}-PUB1-SN
-                - Fn::ImportValue: !Sub ${EnvironmentName}-PUB2-SN
+                - Fn::ImportValue: !Sub ${EnvironmentName}-PRIV-NETS
             LaunchConfigurationName: !Ref WebLaunchConfig
             MinSize: '0'
             MaxSize: '1'
             DesiredCapacity: '1'
+            TargetGroupARNs:
+            - Ref: WebTargetGroup
+
+### Load Balancer
+    WebTargetGroup:
+        Type: AWS::ElasticLoadBalancingV2::TargetGroup
+        Properties:
+            HealthCheckIntervalSeconds: 10
+            HealthCheckPath: /
+            HealthCheckProtocol: HTTP
+            HealthCheckTimeoutSeconds: 8
+            HealthyThresholdCount: 2
+            Port: 80
+            Protocol: HTTP
+            UnhealthyThresholdCount: 5
+            VpcId: 
+                Fn::ImportValue: !Sub ${EnvironmentName}-VPCID
+    LoadBalancerSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties: 
+            GroupDescription: Allow all inbound http traffic to web servers, and http to internal servers
+            SecurityGroupIngress:
+            - IpProtocol: tcp
+              FromPort: 80
+              ToPort: 80
+              CidrIp: 0.0.0.0/0
+            SecurityGroupEgress:
+            - IpProtocol: tcp
+              FromPort: 80
+              ToPort: 80
+              CidrIp: 0.0.0.0/0
+            VpcId: 
+                Fn::ImportValue: !Sub ${EnvironmentName}-VPCID
+    LoadBalancer:
+        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+        Properties: 
+            SecurityGroups: 
+                - !Ref WebSecurityGroup
+            Subnets: 
+                - Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN"
+                - Fn::ImportValue: !Sub "${EnvironmentName}-PUB2-SN"
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${EnvironmentName} Load Balancer
+    LoadBalancerListener:
+        Type: AWS::ElasticLoadBalancingV2::Listener
+        Properties:
+            DefaultActions:
+            - Type: forward
+              TargetGroupArn:
+                Ref: WebTargetGroup
+            LoadBalancerArn: !Ref LoadBalancer
+            Port: 80
+            Protocol: HTTP
 
 
+
+Outputs:
+    LoadBalancerDNS: 
+        Description: DNS of the Load Balancer
+        Value: !GetAtt LoadBalancer.DNSName
+        Export:
+            Name: !Sub ${EnvironmentName}-LB-DNS
