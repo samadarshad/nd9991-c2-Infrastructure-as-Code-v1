@@ -9,8 +9,25 @@ Parameters:
 Resources:
     S3Bucket:
         Type: AWS::S3::Bucket
+        DeletionPolicy: Retain
+        Properties:
+            AccessControl: Private
 
-
+    S3BucketReadRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                - Effect: Allow
+                  Principal:
+                    Service:
+                    - ec2.amazonaws.com
+                  Action:
+                    - sts:AssumeRole
+            Path: /
+            ManagedPolicyArns:
+                - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
 
 Outputs:
     S3Bucket: 
@@ -18,3 +35,8 @@ Outputs:
         Value: !Ref S3Bucket
         Export:
             Name: !Sub ${EnvironmentName}-S3-BUCKET
+    S3BucketReadRole: 
+        Description: ID of the S3 Bucket Read Role
+        Value: !Ref S3BucketReadRole
+        Export:
+            Name: !Sub ${EnvironmentName}-S3-IAM-ROLE
