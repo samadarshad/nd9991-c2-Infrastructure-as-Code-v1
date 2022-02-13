@@ -1,11 +1,34 @@
-### Project Title - Deploy a high-availability web app using CloudFormation
-This folder provides the starter code for the "ND9991 - C2- Infrastructure as Code - Deploy a high-availability web app using CloudFormation" project. This folder contains the following files:
+# Udacity Cloud Devops Project 2 - Deploy a high-availability web app using CloudFormation
+
+## Architecture Diagram:
+![Diagram](../UdacityAWSDevopsC2.png)
 
 
-#### final-project-starter.yml
-Students have to write the CloudFormation code using this YAML template for building the cloud infrastructure, as required for the project. 
+## Getting Started
+Deploy S3 bucket
+```
+aws cloudformation create-stack --stack-name UdacityAwsDevopsC2S3 --template-body file://s3.yml  --parameters file://s3.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+```
+Upload `index.html` to the bucket.
 
-#### server-parameters.json
-Students may use a JSON file for increasing the generic nature of the YAML code. For example, the JSON file contains a "ParameterKey" as "EnvironmentName" and "ParameterValue" as "UdacityProject". 
+Deploy the network
+```
+aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Network --template-body file://network.yml  --parameters file://network.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+```
 
-In YAML code, the `${EnvironmentName}` would be substituted with `UdacityProject` accordingly.
+
+Deploy the bastion server
+```
+aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Bastion --template-body file://bastion.yml  --parameters file://bastion.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+```
+
+Deploy the web server and load balancer
+```
+aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Servers --template-body file://servers.yml  --parameters file://servers.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+```
+
+Visit load balancer endpoint to confirm the following webpage loads:
+![Webpage](../ExpectedWebpage.png)
+
+
+The endpoint will be output `LoadBalancerDNS` from the `UdacityAwsDevopsC2Servers` stack.
