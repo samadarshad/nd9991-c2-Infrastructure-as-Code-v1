@@ -16,10 +16,6 @@
 		"ParameterValue": "udacity-devops-c2"
 	},
 	{
-		"ParameterKey": "LocalIP",
-		"ParameterValue": "188.211.160.1"
-	},
-	{
 		"ParameterKey": "MinimumNumInstances",
 		"ParameterValue": "0"
 	},

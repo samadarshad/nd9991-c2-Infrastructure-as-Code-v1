@@ -14,9 +14,6 @@ Parameters:
     WebKeyName:
         Description: Key name for accessing public servers
         Type: String
-    LocalIP:
-        Description: Local IP for accessing public servers
-        Type: String
     MinimumNumInstances:
         Description: Minimum size for web autoscaling group
         Type: Number
@@ -32,7 +29,7 @@ Resources:
     WebSecurityGroup:
         Type: AWS::EC2::SecurityGroup
         Properties: 
-            GroupDescription: Allow http + local ssh (temp) traffic to web servers, and unrestricted outbound traffic
+            GroupDescription: Allow http + Bastion ssh traffic to web servers, and unrestricted outbound traffic
             SecurityGroupIngress:
             - IpProtocol: tcp
               FromPort: 80
@@ -41,13 +38,18 @@ Resources:
             - IpProtocol: tcp
               FromPort: 22
               ToPort: 22
-              CidrIp: !Sub ${LocalIP}/32
+              CidrIp: !Join ["", [Fn::ImportValue: !Sub "${EnvironmentName}-BASTION-PRIV-IP", "/32"]]
             SecurityGroupEgress:
             - IpProtocol: -1
               CidrIp: 0.0.0.0/0
             VpcId: 
                 Fn::ImportValue: !Sub ${EnvironmentName}-VPCID
 
+    WebInstanceProfile:
+        Type: AWS::IAM::InstanceProfile
+        Properties: 
+            Roles: 
+            - Fn::ImportValue: !Sub ${EnvironmentName}-S3-IAM-ROLE
 
     WebLaunchConfig: 
         Type: AWS::AutoScaling::LaunchConfiguration
@@ -56,6 +58,7 @@ Resources:
             SecurityGroups: 
                 - !Ref WebSecurityGroup
             InstanceType: !Ref WebInstanceType
+            IamInstanceProfile: !Ref WebInstanceProfile
             KeyName: !Ref WebKeyName
             BlockDeviceMappings:
                 - DeviceName: /dev/sda1

@@ -1,0 +1,56 @@
+Description: >
+    Samad Arshad / Udacity AWS Devops Project 2
+
+Parameters:
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+    BastionInstanceAmiId:
+        Description: Region specific image ami id for Bastion servers
+        Type: String
+    BastionInstanceType:
+        Description: Instance type for Bastion servers
+        Type: String
+    BastionKeyName:
+        Description: Key name for accessing public servers
+        Type: String
+    LocalIP:
+        Description: Local IP for accessing public servers
+        Type: String
+
+Resources:
+    BastionSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties: 
+            GroupDescription: Allow local ssh traffic to bastion only
+            SecurityGroupIngress:
+            - IpProtocol: tcp
+              FromPort: 22
+              ToPort: 22
+              CidrIp: !Sub ${LocalIP}/32
+            VpcId: 
+                Fn::ImportValue: !Sub ${EnvironmentName}-VPCID
+
+    Bastion: 
+        Type: AWS::EC2::Instance
+        Properties: 
+            InstanceType: !Ref BastionInstanceType
+            SecurityGroupIds: 
+            - !Ref BastionSecurityGroup
+            KeyName: !Ref BastionKeyName
+            ImageId: !Ref BastionInstanceAmiId
+            SubnetId: 
+                Fn::ImportValue: !Sub ${EnvironmentName}-PUB1-SN
+
+
+Outputs:
+    BastionPublicIp: 
+        Description: Public IP address of Bastion
+        Value: !GetAtt Bastion.PublicIp
+        Export:
+            Name: !Sub ${EnvironmentName}-BASTION-PUB-IP
+    BastionPrivateIp: 
+        Description: Private IP address of Bastion
+        Value: !GetAtt Bastion.PrivateIp
+        Export:
+            Name: !Sub ${EnvironmentName}-BASTION-PRIV-IP

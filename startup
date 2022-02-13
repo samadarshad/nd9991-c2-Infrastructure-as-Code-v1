@@ -4,18 +4,24 @@ export AWS_DEFAULT_PROFILE=udacity
 ---
 
 cd project_starter
-aws cloudformation create-stack --stack-name UdacityAwsDevopsC2 --template-body file://final-project-starter.yml  --parameters file://server-parameters.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
-aws cloudformation update-stack --stack-name UdacityAwsDevopsC2 --template-body file://final-project-starter.yml  --parameters file://server-parameters.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+
+aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Bastion --template-body file://bastion.yml  --parameters file://bastion.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+scp udacity-devops-c2.pem ec2-user@ec2-107-20-61-60.compute-1.amazonaws.com:/home/ec2-user
 
 
+aws cloudformation update-stack --stack-name UdacityAwsDevopsC2S3 --template-body file://s3.yml  --parameters file://s3.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
 
-aws cloudformation update-stack --stack-name UdacityAwsDevopsC2 --template-body file://network.yml  --parameters file://network.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+aws cloudformation update-stack --stack-name UdacityAwsDevopsC2Network --template-body file://network.yml  --parameters file://network.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
 
 
 aws cloudformation update-stack --stack-name UdacityAwsDevopsC2Servers --template-body file://servers.yml  --parameters file://servers.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
 
-aws cloudformation update-stack --stack-name UdacityAwsDevopsC2S3 --template-body file://s3.yml  --parameters file://s3.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
 
-aws cloudformation delete-stack --stack-name UdacityAwsDevopsC2 --region=us-east-1
+aws cloudformation delete-stack --stack-name UdacityAwsDevopsC2Network --region=us-east-1
 aws cloudformation delete-stack --stack-name UdacityAwsDevopsC2Servers --region=us-east-1
 aws cloudformation delete-stack --stack-name UdacityAwsDevopsC2S3 --region=us-east-1
+
+
+
+https://github.com/akmukherjee/CloudDevOps/blob/master/Assignment2/udacity-servers.yaml
+https://github.com/dford1099/DeVops-Project-2-A-Highly-Available-Web-App-using-CloudFormation/blob/1f8c8a52134085b2e8e56e926ff65e1bd905b206/Udacity-Udagram-DeVops%20Project2-Davone/udagram_servers_template.yml

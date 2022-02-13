@@ -25,7 +25,6 @@ Resources:
                     - ec2.amazonaws.com
                   Action:
                     - sts:AssumeRole
-            Path: /
             ManagedPolicyArns:
                 - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
 
