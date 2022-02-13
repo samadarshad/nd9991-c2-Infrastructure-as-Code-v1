@@ -6,10 +6,14 @@ export AWS_DEFAULT_PROFILE=udacity
 cd project_starter
 
 aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Bastion --template-body file://bastion.yml  --parameters file://bastion.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
-scp udacity-devops-c2.pem ec2-user@ec2-107-20-61-60.compute-1.amazonaws.com:/home/ec2-user
-
+scp -i udacity-devops-c2.pem udacity-devops-c2.pem ec2-user@ec2-54-82-97-144.compute-1.amazonaws.com:/home/ec2-user
+ssh -i "udacity-devops-c2.pem" ubuntu@10.0.3.180
+service apache2 status 
+- confirm it is online
 
 aws cloudformation update-stack --stack-name UdacityAwsDevopsC2S3 --template-body file://s3.yml  --parameters file://s3.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
+- Upload index.html to s3 bucket
+
 
 aws cloudformation update-stack --stack-name UdacityAwsDevopsC2Network --template-body file://network.yml  --parameters file://network.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
 
