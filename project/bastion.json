@@ -1,0 +1,22 @@
+[
+	{
+		"ParameterKey": "EnvironmentName",
+		"ParameterValue": "UdacityAwsDevopsC2Project"
+	},
+	{
+		"ParameterKey": "BastionInstanceAmiId",
+		"ParameterValue": "ami-033b95fb8079dc481"
+	},
+	{
+		"ParameterKey": "BastionInstanceType",
+		"ParameterValue": "t2.micro"
+	},
+	{
+		"ParameterKey": "BastionKeyName",
+		"ParameterValue": "udacity-devops-c2"
+	},
+	{
+		"ParameterKey": "LocalIP",
+		"ParameterValue": "188.211.160.1"
+	}
+]

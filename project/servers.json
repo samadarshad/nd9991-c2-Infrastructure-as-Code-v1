@@ -1,0 +1,30 @@
+[
+	{
+		"ParameterKey": "EnvironmentName",
+		"ParameterValue": "UdacityAwsDevopsC2Project"
+	},
+	{
+		"ParameterKey": "WebInstanceAmiId",
+		"ParameterValue": "ami-0e472ba40eb589f49"
+	},
+	{
+		"ParameterKey": "WebInstanceType",
+		"ParameterValue": "t2.medium"
+	},
+	{
+		"ParameterKey": "WebKeyName",
+		"ParameterValue": "udacity-devops-c2"
+	},
+	{
+		"ParameterKey": "MinimumNumInstances",
+		"ParameterValue": "4"
+	},
+	{
+		"ParameterKey": "MaximumNumInstances",
+		"ParameterValue": "4"
+	},
+	{
+		"ParameterKey": "DesiredNumInstances",
+		"ParameterValue": "4"
+	}
+]
