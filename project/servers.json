@@ -9,7 +9,7 @@
 	},
 	{
 		"ParameterKey": "WebInstanceType",
-		"ParameterValue": "t2.medium"
+		"ParameterValue": "t3.small"
 	},
 	{
 		"ParameterKey": "WebKeyName",

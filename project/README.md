@@ -18,6 +18,7 @@ Deploy the network
 aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Network --template-body file://network.yml  --parameters file://network.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
 ```
 
+If you want ssh access into the private servers:
 Create a keypair to access the bastion server with a name, and update parameter in bastion.json `"ParameterKey": "BastionKeyName"`.
 
 Find your local IP address and update parameter in bastion.json `"ParameterKey": "LocalIP"`.
@@ -28,6 +29,7 @@ aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Bastion --templat
 ```
 
 Create a keypair to access the private web servers with a name, and update parameter in servers.json `"ParameterKey": "WebKeyName"`.
+Uncomment `KeyName: !Ref WebKeyName` in servers.yml
 
 Deploy the web server and load balancer
 ```
