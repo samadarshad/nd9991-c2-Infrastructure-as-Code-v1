@@ -17,14 +17,14 @@
 	},
 	{
 		"ParameterKey": "MinimumNumInstances",
-		"ParameterValue": "0"
+		"ParameterValue": "4"
 	},
 	{
 		"ParameterKey": "MaximumNumInstances",
-		"ParameterValue": "1"
+		"ParameterValue": "4"
 	},
 	{
 		"ParameterKey": "DesiredNumInstances",
-		"ParameterValue": "1"
+		"ParameterValue": "4"
 	}
 ]

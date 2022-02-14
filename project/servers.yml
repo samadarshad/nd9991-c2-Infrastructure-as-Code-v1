@@ -59,6 +59,7 @@ Resources:
                 - !Ref WebSecurityGroup
             InstanceType: !Ref WebInstanceType
             IamInstanceProfile: !Ref WebInstanceProfile
+            # The KeyName property is needed for the bastion server to access this private web server
             KeyName: !Ref WebKeyName
             BlockDeviceMappings:
                 - DeviceName: /dev/sda1
