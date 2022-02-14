@@ -32,6 +32,9 @@ Deploy the web server and load balancer
 aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Servers --template-body file://servers.yml  --parameters file://servers.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
 ```
 
+You should see 4 servers deployed across the 2 availability zones:
+![Instances](../Ec2Instances.png)
+
 Visit load balancer endpoint to confirm the following webpage loads:
 ![Webpage](../ExpectedWebpage.png)
 
@@ -57,6 +60,8 @@ Test the web server has been running
 ```
 service apache2 status 
 ```
+
+![Ssh](../BastionSshWebserver.png)
 
 ## Deleting
 
