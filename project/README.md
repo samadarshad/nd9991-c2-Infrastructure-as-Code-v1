@@ -5,6 +5,8 @@
 
 
 ## Getting Started
+Follow these steps in order to deploy the infrastructure:
+
 Deploy S3 bucket
 ```
 aws cloudformation create-stack --stack-name UdacityAwsDevopsC2S3 --template-body file://s3.yml  --parameters file://s3.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
@@ -32,7 +34,7 @@ Deploy the web server and load balancer
 aws cloudformation create-stack --stack-name UdacityAwsDevopsC2Servers --template-body file://servers.yml  --parameters file://servers.json --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" --region=us-east-1
 ```
 
-You should see 4 servers deployed across the 2 availability zones:
+You should see 4 private servers deployed across the 2 availability zones, and a public bastion server:
 ![Instances](../Ec2Instances.png)
 
 Visit load balancer endpoint to confirm the following webpage loads:
